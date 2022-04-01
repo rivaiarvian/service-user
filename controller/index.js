@@ -24,9 +24,8 @@ module.exports = {
         });
       }
 
-      const user = await User.findOne({ where: { email: email } });
-      console.log(email);
-      console.log(user);
+      const user = await User.findOne({ email: email });
+
       if (user) {
         return res.status(409).json({
           status: "error",
@@ -74,7 +73,7 @@ module.exports = {
         });
       }
 
-      const user = await User.findOne({ where: { email: email } });
+      const user = await User.findOne({ email: email });
 
       if (!user) {
         return res.status(404).json({
@@ -84,6 +83,7 @@ module.exports = {
       }
 
       const isValidPassword = await bcrypt.compare(password, user.password);
+
       if (!isValidPassword) {
         return res.status(404).json({
           status: "error",
@@ -100,6 +100,71 @@ module.exports = {
           role: user.role,
           avatar: user.avatar,
           profession: user.profession,
+        },
+      });
+    } catch (error) {
+      console.log("error:", error);
+    }
+  },
+  updateProfile: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, email, password, profession, avatar } = req.body;
+      const schema = {
+        name: "string|empty:false",
+        email: "email|empty:false",
+        password: "string|min:6",
+        profession: "string|optional",
+        avatar: "string|optional",
+      };
+
+      const validate = v.validate(req.body, schema);
+
+      if (validate.length) {
+        return res.status(400).json({
+          status: "error",
+          message: validate,
+        });
+      }
+
+      const user = await User.findByPk(id);
+
+      if (!user) {
+        return res.status(404).json({
+          status: "error",
+          message: "User not found",
+        });
+      }
+
+      if (email) {
+        const checkEmail = await User.findOne({ where: { email: email } });
+
+        if (checkEmail && email !== user.email) {
+          return res.status(409).json({
+            status: "error",
+            message: "Email already Exist",
+          });
+        }
+      }
+
+      const passwordHas = await bcrypt.hash(password, 10);
+
+      await user.update({
+        email: email,
+        password: passwordHas,
+        name: name,
+        profession: profession,
+        avatar: avatar,
+      });
+
+      return res.status(200).json({
+        status: "success",
+        data: {
+          id: user.id,
+          name,
+          email,
+          profession,
+          avatar,
         },
       });
     } catch (error) {
