@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       avatar: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       profession: {
         type: DataTypes.STRING,
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "created_at",
         allowNull: false,
       },
-      updateddAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         field: "updated_At",
         allowNull: false,

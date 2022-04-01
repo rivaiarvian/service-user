@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const refreshToken = sequelize.defin(
+  const refreshToken = sequelize.define(
     "RefreshToken",
     {
       id: {
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "created_at",
         allowNull: false,
       },
-      updateddAt: {
+      updatedAt: {
         type: DataTypes.DATE,
         field: "updated_At",
         allowNull: false,
