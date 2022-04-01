@@ -171,4 +171,48 @@ module.exports = {
       console.log("error:", error);
     }
   },
+  getUserById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findByPk(id, {
+        attributes: ["id", "name", "email", "profession", "avatar"],
+      });
+      if (!user) {
+        return res.status(404).json({
+          status: "error",
+          message: "User not found",
+        });
+      }
+
+      return res.status(200).json({
+        statu: "success",
+        data: user,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getUsers: async (req, res) => {
+    try {
+      const userIds = req.query.user_ids || [];
+
+      const sqlOptions = {
+        attributes: ["id", "name", "email", "profession", "avatar", "role"],
+      };
+
+      if (userIds.length) {
+        sqlOptions.where = {
+          id: userIds,
+        };
+      }
+
+      const user = await User.findAll(sqlOptions);
+      return res.status(200).json({
+        status: "success",
+        data: user,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
