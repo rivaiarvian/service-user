@@ -10,7 +10,7 @@ const {
 } = require("../controller");
 
 router.post("/register", register);
-router.post("/sign-in", login);
+router.post("/login", login);
 router.post("/logout", logout);
 router.put("/:id", updateProfile);
 router.get("/:id", getUserById);
