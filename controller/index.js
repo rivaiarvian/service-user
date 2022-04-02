@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, RefreshToken } = require("../models");
 const Validator = require("fastest-validator");
 const v = new Validator();
 
@@ -210,6 +210,28 @@ module.exports = {
       return res.status(200).json({
         status: "success",
         data: user,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  logout: async (req, res) => {
+    try {
+      const { userId } = req.body;
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(404).json({
+          status: "error",
+          message: "User not found",
+        });
+      }
+
+      await RefreshToken.destroy({ where: { user_id: userId } });
+
+      return res.status(200).json({
+        status: "success",
+        message: "refresh token deleted",
       });
     } catch (error) {
       console.log(error);
