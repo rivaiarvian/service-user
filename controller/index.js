@@ -58,7 +58,6 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-
       const schema = {
         email: "email|empty:false",
         password: "string|min:6",
@@ -73,8 +72,7 @@ module.exports = {
         });
       }
 
-      const user = await User.findOne({ email: email });
-
+      const user = await User.findOne({ where: { email: email } });
       if (!user) {
         return res.status(404).json({
           status: "error",
