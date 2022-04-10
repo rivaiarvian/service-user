@@ -183,7 +183,7 @@ module.exports = {
       }
 
       return res.status(200).json({
-        statu: "success",
+        status: "success",
         data: user,
       });
     } catch (error) {
